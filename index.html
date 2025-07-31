@@ -2,17 +2,35 @@
 <html>
 <head>
   <title>Cryptickles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Cryptickles</h1>
-  <p id="today">Date</p>
-  <p id="clue"></p>
-  <input type="text" id="answer" placeholder="Type your answer">
-  <button id="submit">Submit</button>
-  <button id="hintBtn">Hint</button>
-  <p id="hint"></p>
-  <p id="result"></p>
+  <div class="header">
+    <div class="header-center">
+      <div class="header-title">Cryptickles</div>
+    </div>
+  </div>
+
+  <div class="date-info">
+    <div id="today">Date</div>
+  </div>
+
+  <div class="clue-container">
+    <div id="clue" class="clue-text"></div>
+  </div>
+
+  <div class="input-container">
+    <input type="text" id="answer" placeholder="Type your answer" class="answer-input">
+  </div>
+
+  <div class="button-container">
+    <button id="submit" class="check-btn">check</button>
+    <button id="hintBtn" class="hint-btn">hints</button>
+  </div>
+
+  <p id="hint" class="hint-text"></p>
+  <p id="result" class="result-text"></p>
   <script src="script.js"></script>
 </body>
 </html>

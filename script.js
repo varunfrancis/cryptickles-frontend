@@ -42,16 +42,19 @@ function loadClue() {
 }
 
 document.getElementById("submit").addEventListener("click", function() {
-    const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+    const answerInput = document.getElementById("answer");
+    const userAnswer = answerInput.value.trim().toLowerCase();
     const correctAnswer = clues[currentIndex].answer.toLowerCase();
     const result = document.getElementById("result");
 
     if (userAnswer === correctAnswer) {
         result.textContent = "Correct Answer!";
         result.style.color = "green";
+        answerInput.classList.add("answer-correct");
     } else {
         result.textContent = "Wrong Answer. Try Again!";
         result.style.color = "red";
+        answerInput.classList.remove("answer-correct");
     }
 });
 
