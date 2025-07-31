@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Cryptickles</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Lora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="header">
     <div class="header-center">
@@ -21,16 +26,27 @@
   </div>
 
   <div class="input-container">
-    <input type="text" id="answer" placeholder="Type your answer" class="answer-input">
+    <input type="text" id="answer" class="answer-input">
   </div>
+
+  <div class="hint-container">
+    <div class="hint-container-header">
+      <div class="hint-icon">
+        <img src="./assets/hint icon.svg" alt="Hint icon" width="36" height="36">
+      </div>
+    </div>
+    <div class="hint-title">Hint</div>
+    <p id="hint" class="hint-text"></p>
+  </div>
+
+  <p id="result" class="result-text"></p>
 
   <div class="button-container">
     <button id="submit" class="check-btn">check</button>
-    <button id="hintBtn" class="hint-btn">hints</button>
+    <button id="hintBtn" class="hint-btn">Hint</button>
   </div>
 
-  <p id="hint" class="hint-text"></p>
-  <p id="result" class="result-text"></p>
   <script src="script.js"></script>
 </body>
+
 </html>

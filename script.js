@@ -39,6 +39,7 @@ function loadClue() {
     document.getElementById("answer").value = "";
     document.getElementById("hint").textContent = "";
     document.getElementById("result").textContent = "";
+    document.querySelector('.hint-container').style.display = 'none';
 }
 
 document.getElementById("submit").addEventListener("click", function() {
@@ -48,8 +49,8 @@ document.getElementById("submit").addEventListener("click", function() {
     const result = document.getElementById("result");
 
     if (userAnswer === correctAnswer) {
-        result.textContent = "Correct Answer!";
-        result.style.color = "green";
+        result.textContent = "You got it!";
+        result.style.color = "#0F6326"; // green (matches .result-text in CSS)
         answerInput.classList.add("answer-correct");
     } else {
         result.textContent = "Wrong Answer. Try Again!";
@@ -61,12 +62,15 @@ document.getElementById("submit").addEventListener("click", function() {
 // Hint button functionality
 document.getElementById("hintBtn").addEventListener("click", function() {    
     const hintElement = document.getElementById("hint");
+    const hintContainer = document.querySelector('.hint-container');
     if (clues[currentIndex].hint) {
-        hintElement.textContent = "Hint: " + clues[currentIndex].hint;
-        hintElement.style.color = "blue";
+        hintElement.textContent = clues[currentIndex].hint;
+        // hintElement.style.color = "blue";
+        hintContainer.style.display = 'flex';
     } else {
         hintElement.textContent = "No hint available for this clue.";
         hintElement.style.color = "gray";
+        hintContainer.style.display = 'flex';
     }
 });
 
