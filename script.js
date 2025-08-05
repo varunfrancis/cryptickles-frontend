@@ -48,19 +48,43 @@ document.getElementById("submit").addEventListener("click", function() {
     const correctAnswer = clues[currentIndex].answer.toLowerCase();
     const result = document.getElementById("result");
 
+    // Track check button click
+    gtag('event', 'check_button_click', {
+        'event_category': 'user_interaction',
+        'event_label': 'check_answer'
+    });
+
     if (userAnswer === correctAnswer) {
         result.textContent = "You got it!";
         result.style.color = "#0F6326"; // green (matches .result-text in CSS)
         answerInput.classList.add("answer-correct");
+        
+        // Track correct answer
+        gtag('event', 'correct_answer', {
+            'event_category': 'gameplay',
+            'event_label': 'correct_answer'
+        });
     } else {
         result.textContent = "Wrong Answer. Try Again!";
         result.style.color = "red";
         answerInput.classList.remove("answer-correct");
+        
+        // Track wrong answer
+        gtag('event', 'wrong_answer', {
+            'event_category': 'gameplay',
+            'event_label': 'wrong_answer'
+        });
     }
 });
 
 // Hint button functionality
 document.getElementById("hintBtn").addEventListener("click", function() {    
+    // Track hint button click
+    gtag('event', 'hint_button_click', {
+        'event_category': 'user_interaction',
+        'event_label': 'show_hint'
+    });
+    
     const hintElement = document.getElementById("hint");
     const hintContainer = document.querySelector('.hint-container');
     if (clues[currentIndex].hint) {
