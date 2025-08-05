@@ -7,6 +7,87 @@ function getTodayDateString() {
     return today.toISOString().split('T')[0];
 }
 
+// Create letter input fields based on answer length
+function createLetterInputs(answerLength) {
+    const container = document.getElementById("letter-inputs");
+    container.innerHTML = ""; // Clear existing inputs
+    
+    for (let i = 0; i < answerLength; i++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "letter-input";
+        input.maxLength = "1";
+        input.dataset.index = i;
+        
+        // Add input event listeners for navigation
+        input.addEventListener("input", function(e) {
+            const value = e.target.value.toUpperCase();
+            e.target.value = value;
+            
+            // Move to next input if character entered
+            if (value && i < answerLength - 1) {
+                const nextInput = container.children[i + 1];
+                nextInput.focus();
+            }
+        });
+        
+        // Handle backspace navigation
+        input.addEventListener("keydown", function(e) {
+            if (e.key === "Backspace" && !e.target.value && i > 0) {
+                const prevInput = container.children[i - 1];
+                prevInput.focus();
+            } else if (e.key === "Enter") {
+                document.getElementById("submit").click();
+            }
+        });
+        
+        container.appendChild(input);
+    }
+    
+    // Focus first input
+    if (container.children.length > 0) {
+        container.children[0].focus();
+    }
+}
+
+// Get concatenated answer from all letter inputs
+function getFullAnswer() {
+    const container = document.getElementById("letter-inputs");
+    let answer = "";
+    for (let i = 0; i < container.children.length; i++) {
+        answer += container.children[i].value || "";
+    }
+    return answer.trim().toLowerCase();
+}
+
+// Clear all letter inputs
+function clearLetterInputs() {
+    const container = document.getElementById("letter-inputs");
+    for (let i = 0; i < container.children.length; i++) {
+        container.children[i].value = "";
+        container.children[i].classList.remove("answer-correct");
+    }
+    if (container.children.length > 0) {
+        container.children[0].focus();
+    }
+}
+
+// Apply correct answer styling to all inputs
+function applyCorrectStyling() {
+    const container = document.getElementById("letter-inputs");
+    for (let i = 0; i < container.children.length; i++) {
+        container.children[i].classList.add("answer-correct");
+    }
+}
+
+// Remove correct answer styling from all inputs
+function removeCorrectStyling() {
+    const container = document.getElementById("letter-inputs");
+    for (let i = 0; i < container.children.length; i++) {
+        container.children[i].classList.remove("answer-correct");
+    }
+}
+
 // Fetch and load today's clue
 function loadTodayClue() {
     const todayDate = getTodayDateString();
@@ -15,18 +96,27 @@ function loadTodayClue() {
             if (!res.ok) throw new Error("missing");
             return res.json();
         })
-        .then(data => {
-            clues = [data];
-            currentIndex = 0;
-            loadClue();
-            // Show input/buttons in case they were hidden before
-            document.getElementById("answer").style.display = "";
-            document.getElementById("submit").style.display = "";
-            document.getElementById("hintBtn").style.display = "";
-        })
+            .then(data => {
+        clues = [data];
+        currentIndex = 0;
+        loadClue();
+        // Show input/buttons in case they were hidden before
+        document.getElementById("letter-inputs").style.display = "";
+        document.getElementById("submit").style.display = "";
+        document.getElementById("hintBtn").style.display = "";
+        
+        // Create letter inputs based on answer length
+        const answerLength = data.answer_length || data.answer.length;
+        createLetterInputs(answerLength);
+        
+        // Log answer length for debugging (optional)
+        if (data.answer_length) {
+            console.log(`Answer length: ${data.answer_length}`);
+        }
+    })
         .catch(err => {
             document.getElementById("clue").textContent = "Today's clue missing";
-            document.getElementById("answer").style.display = "none";
+            document.getElementById("letter-inputs").style.display = "none";
             document.getElementById("submit").style.display = "none";
             document.getElementById("hintBtn").style.display = "none";
             document.getElementById("hint").textContent = "";
@@ -36,15 +126,14 @@ function loadTodayClue() {
 
 function loadClue() {    
     document.getElementById("clue").textContent = clues[currentIndex].clue;
-    document.getElementById("answer").value = "";
+    clearLetterInputs();
     document.getElementById("hint").textContent = "";
     document.getElementById("result").textContent = "";
     document.querySelector('.hint-container').style.display = 'none';
 }
 
 document.getElementById("submit").addEventListener("click", function() {
-    const answerInput = document.getElementById("answer");
-    const userAnswer = answerInput.value.trim().toLowerCase();
+    const userAnswer = getFullAnswer();
     const correctAnswer = clues[currentIndex].answer.toLowerCase();
     const result = document.getElementById("result");
 
@@ -57,7 +146,7 @@ document.getElementById("submit").addEventListener("click", function() {
     if (userAnswer === correctAnswer) {
         result.innerHTML = "You got it!<br>Come back here tomorrow for the next clue.";
         result.style.color = "#0F6326"; // green (matches .result-text in CSS)
-        answerInput.classList.add("answer-correct");
+        applyCorrectStyling();
         
         // Track correct answer
         gtag('event', 'correct_answer', {
@@ -67,7 +156,7 @@ document.getElementById("submit").addEventListener("click", function() {
     } else {
         result.textContent = "Wrong Answer. Try Again!";
         result.style.color = "red";
-        answerInput.classList.remove("answer-correct");
+        removeCorrectStyling();
         
         // Track wrong answer
         gtag('event', 'wrong_answer', {
@@ -98,12 +187,7 @@ document.getElementById("hintBtn").addEventListener("click", function() {
     }
 });
 
-// Allow pressing Enter to submit
-document.getElementById("answer").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        document.getElementById("submit").click();
-    }
-});
+// Note: Enter key handling is now done within each letter input's event listener
 
 document.addEventListener("DOMContentLoaded", function() {
     const today = new Date();
