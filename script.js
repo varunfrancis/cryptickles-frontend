@@ -1,6 +1,42 @@
 let clues = [];
 let currentIndex = 0;
 
+// Safe gtag wrapper that handles blocked/disabled Google Analytics
+function safeGtag(eventName, parameters) {
+    console.log(`Attempting to track: ${eventName}`, parameters);
+    
+    if (typeof gtag !== 'undefined') {
+        gtag('event', eventName, parameters);
+        console.log(`✅ Successfully tracked: ${eventName}`);
+    } else {
+        console.warn(`⚠️ Google Analytics blocked or not loaded. Event not tracked: ${eventName}`);
+        // Store event locally for debugging
+        const localEvents = JSON.parse(localStorage.getItem('cryptickles_events') || '[]');
+        localEvents.push({
+            event: eventName,
+            parameters: parameters,
+            timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('cryptickles_events', JSON.stringify(localEvents));
+        console.log(`📊 Event stored locally: ${eventName}`);
+    }
+}
+
+// Debug function to test Google Analytics
+function testGtag() {
+    console.log("Testing gtag function...");
+    if (typeof gtag !== 'undefined') {
+        console.log("✅ gtag is available");
+        safeGtag('test_event', {
+            'event_category': 'debug',
+            'event_label': 'test_tracking'
+        });
+    } else {
+        console.error("❌ gtag is not available - Google Analytics may be blocked");
+        console.log("💡 Try disabling your ad blocker for this site");
+    }
+}
+
 // Helper to get today's date in YYYY-MM-DD format
 function getTodayDateString() {
     const today = new Date();
@@ -49,7 +85,8 @@ document.getElementById("submit").addEventListener("click", function() {
     const result = document.getElementById("result");
 
     // Track check button click
-    gtag('event', 'check_button_click', {
+    console.log("Tracking check button click event");
+    safeGtag('check_button_click', {
         'event_category': 'user_interaction',
         'event_label': 'check_answer'
     });
@@ -60,7 +97,8 @@ document.getElementById("submit").addEventListener("click", function() {
         answerInput.classList.add("answer-correct");
         
         // Track correct answer
-        gtag('event', 'correct_answer', {
+        console.log("Tracking correct answer event");
+        safeGtag('correct_answer', {
             'event_category': 'gameplay',
             'event_label': 'correct_answer'
         });
@@ -70,7 +108,8 @@ document.getElementById("submit").addEventListener("click", function() {
         answerInput.classList.remove("answer-correct");
         
         // Track wrong answer
-        gtag('event', 'wrong_answer', {
+        console.log("Tracking wrong answer event");
+        safeGtag('wrong_answer', {
             'event_category': 'gameplay',
             'event_label': 'wrong_answer'
         });
@@ -80,7 +119,8 @@ document.getElementById("submit").addEventListener("click", function() {
 // Hint button functionality
 document.getElementById("hintBtn").addEventListener("click", function() {    
     // Track hint button click
-    gtag('event', 'hint_button_click', {
+    console.log("Tracking hint button click event");
+    safeGtag('hint_button_click', {
         'event_category': 'user_interaction',
         'event_label': 'show_hint'
     });
