@@ -6,19 +6,33 @@ function safeGtag(eventName, parameters) {
     console.log(`Attempting to track: ${eventName}`, parameters);
     
     if (typeof gtag !== 'undefined') {
-        gtag('event', eventName, parameters);
-        console.log(`✅ Successfully tracked: ${eventName}`);
-    } else {
-        console.warn(`⚠️ Google Analytics blocked or not loaded. Event not tracked: ${eventName}`);
-        // Store event locally for debugging
-        const localEvents = JSON.parse(localStorage.getItem('cryptickles_events') || '[]');
-        localEvents.push({
+        // Add more detailed logging
+        console.log(`📊 Sending to GA:`, {
             event: eventName,
             parameters: parameters,
             timestamp: new Date().toISOString()
         });
-        localStorage.setItem('cryptickles_events', JSON.stringify(localEvents));
-        console.log(`📊 Event stored locally: ${eventName}`);
+        
+        gtag('event', eventName, parameters);
+        console.log(`✅ Successfully tracked: ${eventName}`);
+        
+        // Verify the event was queued
+        console.log(` Current dataLayer:`, window.dataLayer);
+    } else {
+        console.warn(`⚠️ Google Analytics blocked or not loaded. Event not tracked: ${eventName}`);
+        // Store event locally for debugging
+        try {
+            const localEvents = JSON.parse(localStorage.getItem('cryptickles_events') || '[]');
+            localEvents.push({
+                event: eventName,
+                parameters: parameters,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('cryptickles_events', JSON.stringify(localEvents));
+            console.log(`📊 Event stored locally: ${eventName}`);
+        } catch (error) {
+            console.error(`❌ Error storing event locally:`, error);
+        }
     }
 }
 
