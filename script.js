@@ -55,7 +55,7 @@ document.getElementById("submit").addEventListener("click", function() {
     });
 
     if (userAnswer === correctAnswer) {
-        result.textContent = "You got it!";
+        result.innerHTML = "You got it!<br>Come back here tomorrow for the next clue.";
         result.style.color = "#0F6326"; // green (matches .result-text in CSS)
         answerInput.classList.add("answer-correct");
         
