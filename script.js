@@ -66,25 +66,28 @@ function clearLetterInputs() {
     for (let i = 0; i < container.children.length; i++) {
         container.children[i].value = "";
         container.children[i].classList.remove("answer-correct");
+        container.children[i].disabled = false;
     }
     if (container.children.length > 0) {
         container.children[0].focus();
     }
 }
 
-// Apply correct answer styling to all inputs
+// Apply correct answer styling to all inputs and disable them
 function applyCorrectStyling() {
     const container = document.getElementById("letter-inputs");
     for (let i = 0; i < container.children.length; i++) {
         container.children[i].classList.add("answer-correct");
+        container.children[i].disabled = true;
     }
 }
 
-// Remove correct answer styling from all inputs
+// Remove correct answer styling from all inputs and enable them
 function removeCorrectStyling() {
     const container = document.getElementById("letter-inputs");
     for (let i = 0; i < container.children.length; i++) {
         container.children[i].classList.remove("answer-correct");
+        container.children[i].disabled = false;
     }
 }
 
@@ -144,7 +147,7 @@ document.getElementById("submit").addEventListener("click", function() {
     });
 
     if (userAnswer === correctAnswer) {
-        result.innerHTML = "You got it!<br>Come back here tomorrow for the next clue.";
+        result.innerHTML = "You got it!<br>New clue every midnight.";
         result.style.color = "#0F6326"; // green (matches .result-text in CSS)
         applyCorrectStyling();
         
