@@ -503,7 +503,7 @@ body {
 
   .footer {
     position: fixed;
-    bottom: 80px; /* Position above the button container */
+    bottom: 100px; /* Position above the button container */
     left: 0;
     right: 0;
     background-color: #fdfaf4;
