@@ -146,6 +146,13 @@ body {
   color: #0F6326;
 }
 
+.letter-input.answer-incorrect {
+    border-color: #C9241B;
+    background-color: #FFF3F2;
+    box-shadow: 0 2px 0 0 rgba(201,36,27,1);
+    color: #C9241B;
+  }
+
 /* Legacy answer-input class for backward compatibility */
 .answer-input {
   width: 100%;
@@ -297,7 +304,20 @@ body {
 }
 
 /* Text Elements */
-.hint-text, .result-text {
+.hint-text {
+  /* margin-left: auto;
+  margin-right: auto; */
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  font-size: 16px;
+  color: #3C4143;
+  font-family: 'figtree';
+}
+
+.result-text {
   /* margin-left: auto;
   margin-right: auto; */
   padding-left: 16px;
@@ -305,11 +325,29 @@ body {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
+  font-size: 24px;
+  color: #4C3104;
+  font-weight: bold;
+  font-family: 'figtree';
+}
+
+.result-text-incorrect {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    font-size: 16px;
+    color: #4C3104;
+    font-family: 'figtree';
+    font-weight: 400;
+}
+
+.next-clue-text {
   font-size: 16px;
-  color: #3C4143;
-  font-size: 16px;
-  /* font-weight: bold; */
-  font-family: 'Poppins';
+  color: #4C3104;
+  font-family: 'figtree';
+  text-align: center;
 }
 
 
@@ -324,10 +362,10 @@ body {
     font-family: 'lora';
 }
 
-.result-text {
+/* .result-text {
   font-weight: bold;
   margin-top: 16px;
-}
+} */
 
 .hint-container {
   display: none;

@@ -87,7 +87,16 @@ function removeCorrectStyling() {
     const container = document.getElementById("letter-inputs");
     for (let i = 0; i < container.children.length; i++) {
         container.children[i].classList.remove("answer-correct");
+        container.children[i].classList.remove("answer-incorrect");
         container.children[i].disabled = false;
+    }
+}
+
+// Apply incorrect answer styling to all inputs
+function applyIncorrectStyling() {
+    const container = document.getElementById("letter-inputs");
+    for (let i = 0; i < container.children.length; i++) {
+        container.children[i].classList.add("answer-incorrect");
     }
 }
 
@@ -124,14 +133,18 @@ function loadTodayClue() {
             document.getElementById("hintBtn").style.display = "none";
             document.getElementById("hint").textContent = "";
             document.getElementById("result").textContent = "";
+            document.getElementById("next-clue-text").textContent = "New clue every midnight.";
         });
 }
 
+// Loads the current clue onto the page, resets input fields and hides hint/result messages.
+// This function is called when a new clue needs to be displayed (e.g., on page load or after fetching a new clue).
 function loadClue() {    
     document.getElementById("clue").textContent = clues[currentIndex].clue;
     clearLetterInputs();
     document.getElementById("hint").textContent = "";
     document.getElementById("result").textContent = "";
+    document.getElementById("next-clue-text").textContent = "";
     document.querySelector('.hint-container').style.display = 'none';
 }
 
@@ -139,6 +152,7 @@ document.getElementById("submit").addEventListener("click", function() {
     const userAnswer = getFullAnswer();
     const correctAnswer = clues[currentIndex].answer.toLowerCase();
     const result = document.getElementById("result");
+    const nextClueText = document.getElementById("next-clue-text");
 
     // Track check button click
     gtag('event', 'check_button_click', {
@@ -147,8 +161,10 @@ document.getElementById("submit").addEventListener("click", function() {
     });
 
     if (userAnswer === correctAnswer) {
-        result.innerHTML = "You got it!<br>New clue every midnight.";
+        result.innerHTML = "You got it! 🎉";
+        nextClueText.textContent = "New clue every midnight.";
         result.style.color = "#0F6326"; // green (matches .result-text in CSS)
+        result.className = "result-text";
         applyCorrectStyling();
         
         // Track correct answer
@@ -157,9 +173,11 @@ document.getElementById("submit").addEventListener("click", function() {
             'event_label': 'correct_answer'
         });
     } else {
-        result.textContent = "Wrong Answer. Try Again!";
-        result.style.color = "red";
+        result.textContent = "Mistakes are fun! Keep trying 👍🏼";
+        nextClueText.textContent = "";
+        result.className = "result-text result-text-incorrect";
         removeCorrectStyling();
+        applyIncorrectStyling();
         
         // Track wrong answer
         gtag('event', 'wrong_answer', {
