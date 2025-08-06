@@ -77,6 +77,7 @@ function clearLetterInputs() {
 function applyCorrectStyling() {
     const container = document.getElementById("letter-inputs");
     for (let i = 0; i < container.children.length; i++) {
+        container.children[i].classList.remove("answer-incorrect");
         container.children[i].classList.add("answer-correct");
         container.children[i].disabled = true;
     }
