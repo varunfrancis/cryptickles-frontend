@@ -502,13 +502,6 @@ body {
   }
 
   .footer {
-    position: fixed;
-    bottom: 100px; /* Position above the button container */
-    left: 0;
-    right: 0;
-    background-color: #fdfaf4;
-    border-top: 0.5px solid rgba(230, 177, 58, 0.5);
-    padding: 10px 0;
-    z-index: 1000;
+    display: none; /* Hide footer on mobile */
   }
 }
