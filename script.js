@@ -4,7 +4,9 @@ let currentIndex = 0;
 // Helper to get today's date in YYYY-MM-DD format
 function getTodayDateString() {
     const today = new Date();
-    return today.toISOString().split('T')[0];
+    // Add 5.5 hours to convert UTC to IST (India Standard Time)
+    const istDate = new Date(today.getTime() + (5.5 * 60 * 60 * 1000));
+    return istDate.toISOString().split('T')[0];
 }
 
 // Create letter input fields based on answer length
