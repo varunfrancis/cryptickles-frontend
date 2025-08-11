@@ -224,14 +224,6 @@ document.getElementById("submit").addEventListener("click", function() {
             }, 600);
         }, 500);
         
-        // Scroll to bottom to show the submit clue container
-        setTimeout(() => {
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: 'smooth'
-            });
-        }, 300);
-        
         // Track correct answer
         gtag('event', 'correct_answer', {
             'event_category': 'gameplay',
