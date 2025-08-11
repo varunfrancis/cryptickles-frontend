@@ -164,6 +164,13 @@ function loadClue() {
     document.getElementById("next-clue-text").textContent = "";
     document.querySelector('.hint-container').style.display = 'none';
     document.querySelector('.submit-clue-container').style.display = 'none';
+    
+    // Re-enable buttons for new clue
+    document.getElementById('submit').disabled = false;
+    document.getElementById('hintBtn').disabled = false;
+    
+    // Show button container again (in case it was hidden on mobile)
+    document.querySelector('.button-container').style.display = 'flex';
 }
 
 document.getElementById("submit").addEventListener("click", function() {
@@ -185,8 +192,45 @@ document.getElementById("submit").addEventListener("click", function() {
         result.className = "result-text";
         applyCorrectStyling();
         
+        // Disable check button and hint button
+        document.getElementById('submit').disabled = true;
+        document.getElementById('hintBtn').disabled = true;
+        
+        // Hide button container on mobile view only
+        if (window.innerWidth <= 600) {
+            document.querySelector('.button-container').style.display = 'none';
+        }
+        
+        // Show confetti animation
+        const confetti = document.getElementById('confetti');
+        if (confetti) {
+            confetti.style.display = 'block';
+            // Hide confetti after 3 seconds
+            setTimeout(() => {
+                confetti.style.display = 'none';
+            }, 3000);
+        }
+        
         // Show submit clue container when answer is correct
-        document.querySelector('.submit-clue-container').style.display = 'flex';
+        const submitContainer = document.querySelector('.submit-clue-container');
+        submitContainer.style.display = 'flex';
+        
+        // Add wiggle animation to draw attention
+        setTimeout(() => {
+            submitContainer.classList.add('wiggle');
+            // Remove wiggle class after animation completes
+            setTimeout(() => {
+                submitContainer.classList.remove('wiggle');
+            }, 600);
+        }, 500);
+        
+        // Scroll to bottom to show the submit clue container
+        setTimeout(() => {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 300);
         
         // Track correct answer
         gtag('event', 'correct_answer', {

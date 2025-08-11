@@ -54,15 +54,17 @@ body {
   display: flex;
   justify-content: center;
   margin-bottom: 16px;
+  margin-top: 4px;
 }
 
 .setter-name {
-  font-size: 14px;
+  font-size: 12px;
   color: #AA6C06;
+  opacity: 0.7;
   font-weight: 400;
   text-align: center;
-  font-family: 'Figtree';
-  font-style: italic;
+  font-family: 'figtree';
+  font-style: normal;
 }
 
 .header-title {
@@ -318,6 +320,35 @@ body {
   box-shadow: 0 4px 8px rgba(122, 90, 24, 0.2);
 }
 
+/* Disabled button styles */
+.hint-btn:disabled, .check-btn:disabled {
+  background-color: #e5e5e5;
+  color: #9a9a9a;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 0 0 #c0c0c0;
+  opacity: 0.6;
+  border-color: #c0c0c0;
+}
+
+.hint-btn:disabled:hover, .check-btn:disabled:hover {
+  transform: none;
+  box-shadow: 0 2px 0 0 #c0c0c0;
+}
+
+/* Wiggle animation for submit-clue-container */
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(3deg); }
+  50% { transform: rotate(-3deg); }
+  75% { transform: rotate(2deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.wiggle {
+  animation: wiggle 0.6s ease-in-out;
+}
+
 /* Text Elements */
 .hint-text {
   /* margin-left: auto;
@@ -554,32 +585,62 @@ body {
 
 @media (max-width: 600px) {
   body {
-    padding: 24px;
+    padding: 0;
+    padding-top: 80px; /* Space for sticky header */
     padding-bottom: 140px; /* Space for footer + buttons */
-    overflow: hidden; /* Disable scrolling */
-    position: fixed;
+    overflow-y: auto; /* Enable vertical scrolling */
+    position: relative;
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
   }
 
   .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #fdfaf4;
+    z-index: 1000;
+    padding: 15px 24px;
+    border-bottom: 1px solid rgba(230, 177, 58, 0.2);
     flex-direction: column;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 0;
   }
 
   .header-title {
     position: static;
     transform: none;
     font-size: 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 0;
   }
 
-  .clue-container,
-  .answer-input {
-    max-width: 100%;
-    padding: 15px;
+  .date-info,
+  .setter {
+    padding: 0 24px;
+  }
+
+  .clue-container {
+    margin-top: 20px;
+    padding: 0 24px;
+  }
+
+  .input-container,
+  .button-container {
+    padding: 0 24px;
+    margin-bottom: 20px;
+  }
+
+  .hint-container {
+    margin: 24px 24px 20px 24px;
+    width: auto;
+    max-width: none;
+  }
+
+  .submit-clue-container {
+    margin: 24px 24px 20px 24px;
+    width: auto;
+    max-width: none;
   }
 
   .letter-inputs-container {
@@ -597,6 +658,7 @@ body {
     flex-direction: row;
     gap: 10px;
     margin-bottom: 20px;
+    background: none;
   }
 
   .hint-btn, .check-btn {
