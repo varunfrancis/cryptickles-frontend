@@ -5,15 +5,27 @@
   box-sizing: border-box;
 }
 
+/* Disable scrolling globally */
+html, body {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none !important;
+  -webkit-overflow-scrolling: none !important;
+}
+
 body {
   font-family: 'Figtree', Arial, Helvetica, sans-serif;
   background-color: #fdfaf4;
   min-height: 100vh;
   padding: 20px;
   padding-bottom: 80px;
-  position: relative;
+  position: fixed;
   color: #7a5a18;
   overflow: hidden;
+  width: 100%;
+  height: 100vh;
 }
 
 /* Header Styles */
@@ -505,7 +517,6 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(122, 90, 24, 0.2);
 }
-}
 
 @media (max-width: 600px) {
   .hint-container {
@@ -586,10 +597,10 @@ body {
     padding: 0;
     padding-top: 80px; /* Space for sticky header */
     padding-bottom: 140px; /* Space for footer + buttons */
-    overflow-y: auto; /* Enable vertical scrolling */
-    position: relative;
+    overflow: hidden; /* Disable scrolling on mobile */
+    position: fixed;
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
   }
 
   .header {
