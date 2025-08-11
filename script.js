@@ -124,6 +124,14 @@ function loadTodayClue() {
         const answerLength = data.answer_length || data.answer.length;
         createLetterInputs(answerLength);
         
+        // Display setter name if available
+        const setterNameElement = document.querySelector('.setter-name');
+        if (data.setter_name && setterNameElement) {
+            setterNameElement.textContent = `By ${data.setter_name}`;
+        } else if (setterNameElement) {
+            setterNameElement.textContent = "By Anonymous";
+        }
+        
         // Log answer length for debugging (optional)
         if (data.answer_length) {
             console.log(`Answer length: ${data.answer_length}`);
@@ -137,6 +145,12 @@ function loadTodayClue() {
             document.getElementById("hint").textContent = "";
             document.getElementById("result").textContent = "";
             document.getElementById("next-clue-text").textContent = "New clue every midnight.";
+            
+            // Hide setter name when clue is missing
+            const setterNameElement = document.querySelector('.setter-name');
+            if (setterNameElement) {
+                setterNameElement.textContent = "";
+            }
         });
 }
 
@@ -149,6 +163,7 @@ function loadClue() {
     document.getElementById("result").textContent = "";
     document.getElementById("next-clue-text").textContent = "";
     document.querySelector('.hint-container').style.display = 'none';
+    document.querySelector('.submit-clue-container').style.display = 'none';
 }
 
 document.getElementById("submit").addEventListener("click", function() {
@@ -170,6 +185,9 @@ document.getElementById("submit").addEventListener("click", function() {
         result.className = "result-text";
         applyCorrectStyling();
         
+        // Show submit clue container when answer is correct
+        document.querySelector('.submit-clue-container').style.display = 'flex';
+        
         // Track correct answer
         gtag('event', 'correct_answer', {
             'event_category': 'gameplay',
@@ -181,6 +199,9 @@ document.getElementById("submit").addEventListener("click", function() {
         result.className = "result-text result-text-incorrect";
         removeCorrectStyling();
         applyIncorrectStyling();
+        
+        // Hide submit clue container when answer is wrong
+        document.querySelector('.submit-clue-container').style.display = 'none';
         
         // Track wrong answer
         gtag('event', 'wrong_answer', {
