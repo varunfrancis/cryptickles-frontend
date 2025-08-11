@@ -224,7 +224,7 @@ document.getElementById("submit").addEventListener("click", function() {
             // Remove wiggle class after animation completes
             setTimeout(() => {
                 submitContainer.classList.remove('wiggle');
-            }, 600);
+            }, 1800);
         }, 500);
         
         // Track correct answer

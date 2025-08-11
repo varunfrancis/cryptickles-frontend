@@ -349,14 +349,22 @@ body {
 /* Wiggle animation for submit-clue-container */
 @keyframes wiggle {
   0% { transform: rotate(0deg); }
-  25% { transform: rotate(3deg); }
+  8.33% { transform: rotate(3deg); }
+  16.66% { transform: rotate(-3deg); }
+  25% { transform: rotate(2deg); }
+  33.33% { transform: rotate(0deg); }
+  41.66% { transform: rotate(3deg); }
   50% { transform: rotate(-3deg); }
-  75% { transform: rotate(2deg); }
+  58.33% { transform: rotate(2deg); }
+  66.66% { transform: rotate(0deg); }
+  75% { transform: rotate(3deg); }
+  83.33% { transform: rotate(-3deg); }
+  91.66% { transform: rotate(2deg); }
   100% { transform: rotate(0deg); }
 }
 
 .wiggle {
-  animation: wiggle 0.6s ease-in-out;
+  animation: wiggle 1.8s ease-in-out;
 }
 
 /* Text Elements */
