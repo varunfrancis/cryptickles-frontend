@@ -192,6 +192,9 @@ document.getElementById("submit").addEventListener("click", function() {
         result.className = "result-text";
         applyCorrectStyling();
         
+        // Hide hint container when answer is correct
+        document.querySelector('.hint-container').style.display = 'none';
+        
         // Disable check button and hint button
         document.getElementById('submit').disabled = true;
         document.getElementById('hintBtn').disabled = true;
