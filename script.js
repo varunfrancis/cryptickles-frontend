@@ -304,6 +304,7 @@ document.getElementById("shareBtn").addEventListener("click", function() {
 ✅ I got today's Cryptickle, did you try?
 
 ${currentClue.clue}
+
 ${window.location.href}`;
 
     // Check if we're on mobile and Web Share API is available
