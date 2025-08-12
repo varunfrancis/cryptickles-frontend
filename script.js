@@ -1,6 +1,78 @@
 let clues = [];
 let currentIndex = 0;
 
+// Streak management functions
+function getStreak() {
+    const streak = localStorage.getItem('cryptickles_streak');
+    return streak ? parseInt(streak) : 0;
+}
+
+function saveStreak(streakValue) {
+    localStorage.setItem('cryptickles_streak', streakValue.toString());
+}
+
+function getLastSolvedDate() {
+    return localStorage.getItem('cryptickles_last_solved_date');
+}
+
+function saveLastSolvedDate(dateString) {
+    localStorage.setItem('cryptickles_last_solved_date', dateString);
+}
+
+function updateStreak() {
+    const todayDate = getTodayDateString();
+    const lastSolvedDate = getLastSolvedDate();
+    const currentStreak = getStreak();
+    
+    // Check if today is already completed
+    if (lastSolvedDate === todayDate) {
+        return currentStreak; // Already completed today, no change
+    }
+    
+    let newStreak = 1; // At least 1 since we're solving today
+    
+    if (lastSolvedDate) {
+        // Calculate days between last solved and today
+        const lastDate = new Date(lastSolvedDate);
+        const today = new Date(todayDate);
+        const diffTime = today - lastDate;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 1) {
+            // Consecutive day - increment streak
+            newStreak = currentStreak + 1;
+        } else if (diffDays > 1) {
+            // Gap in days - reset streak to 1
+            newStreak = 1;
+        }
+        // If diffDays === 0, it means same day (already handled above)
+    }
+    
+    // Save the new values
+    saveStreak(newStreak);
+    saveLastSolvedDate(todayDate);
+    
+    return newStreak;
+}
+
+function displayStreak() {
+    const streak = getStreak();
+    const streakElement = document.getElementById('streak');
+    const streakContainer = document.querySelector('.streak-container');
+    
+    // Always show streak when this function is called (only called on correct answer)
+    streakElement.innerHTML = `${streak} <span class="fire-wiggle">🔥</span>`;
+    streakContainer.style.display = 'flex';
+    
+    // Remove the fire-wiggle class after animation completes to allow re-triggering
+    setTimeout(() => {
+        const fireEmoji = streakElement.querySelector('.fire-wiggle');
+        if (fireEmoji) {
+            fireEmoji.classList.remove('fire-wiggle');
+        }
+    }, 800); // Match the animation duration
+}
+
 // Helper to get today's date in YYYY-MM-DD format
 function getTodayDateString() {
     const today = new Date();
@@ -166,9 +238,10 @@ function loadClue() {
     document.querySelector('.submit-clue-simple').style.display = 'none';
     
     // Hide share container when new clue loads
-    // The if condition checks if the element exists before trying to set its style.
-    // If you are sure the element always exists, you can remove the if check:
     document.querySelector('.share-container').style.display = 'none';
+    
+    // Hide streak container when new clue loads
+    document.querySelector('.streak-container').style.display = 'none';
     
     // Re-enable buttons for new clue
     document.getElementById('submit').disabled = false;
@@ -196,6 +269,10 @@ document.getElementById("submit").addEventListener("click", function() {
         result.style.color = "#0F6326"; // green (matches .result-text in CSS)
         result.className = "result-text";
         applyCorrectStyling();
+        
+        // Update and display streak
+        const newStreak = updateStreak();
+        displayStreak();
         
         // Hide hint container when answer is correct
         document.querySelector('.hint-container').style.display = 'none';
@@ -388,5 +465,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const today = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById("today").textContent = today.toLocaleDateString('en-US', options);
+    
     loadTodayClue(); // <-- Load today's clue on page load
 });
