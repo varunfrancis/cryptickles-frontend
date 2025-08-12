@@ -163,7 +163,12 @@ function loadClue() {
     document.getElementById("result").textContent = "";
     document.getElementById("next-clue-text").textContent = "";
     document.querySelector('.hint-container').style.display = 'none';
-    document.querySelector('.submit-clue-container').style.display = 'none';
+    document.querySelector('.submit-clue-simple').style.display = 'none';
+    
+    // Hide share container when new clue loads
+    // The if condition checks if the element exists before trying to set its style.
+    // If you are sure the element always exists, you can remove the if check:
+    document.querySelector('.share-container').style.display = 'none';
     
     // Re-enable buttons for new clue
     document.getElementById('submit').disabled = false;
@@ -199,10 +204,8 @@ document.getElementById("submit").addEventListener("click", function() {
         document.getElementById('submit').disabled = true;
         document.getElementById('hintBtn').disabled = true;
         
-        // Hide button container on mobile view only
-        if (window.innerWidth <= 600) {
-            document.querySelector('.button-container').style.display = 'none';
-        }
+        // Hide button container on both mobile and desktop when answer is correct
+        document.querySelector('.button-container').style.display = 'none';
         
         // Show confetti animation
         const confetti = document.getElementById('confetti');
@@ -214,16 +217,22 @@ document.getElementById("submit").addEventListener("click", function() {
             }, 3000);
         }
         
-        // Show submit clue container when answer is correct
-        const submitContainer = document.querySelector('.submit-clue-container');
-        submitContainer.style.display = 'flex';
+        // Show submit clue simple on mobile only when answer is correct
+        if (window.innerWidth <= 600) {
+            const submitSimple = document.querySelector('.submit-clue-simple');
+            submitSimple.style.display = 'block';
+        }
         
-        // Add wiggle animation to draw attention
+        // Show share container when answer is correct
+        const shareContainer = document.querySelector('.share-container');
+        shareContainer.style.display = 'flex';
+        
+        // Add wiggle animation to share container to draw attention
         setTimeout(() => {
-            submitContainer.classList.add('wiggle');
+            shareContainer.classList.add('wiggle');
             // Remove wiggle class after animation completes
             setTimeout(() => {
-                submitContainer.classList.remove('wiggle');
+                shareContainer.classList.remove('wiggle');
             }, 1800);
         }, 500);
         
@@ -239,9 +248,11 @@ document.getElementById("submit").addEventListener("click", function() {
         removeCorrectStyling();
         applyIncorrectStyling();
         
-        // Hide submit clue container when answer is wrong
-        document.querySelector('.submit-clue-container').style.display = 'none';
+        // Hide submit clue simple when answer is wrong
+        document.querySelector('.submit-clue-simple').style.display = 'none';
         
+        // Hide share container when answer is wrong
+        document.querySelector('.share-container').style.display = 'none';
         // Track wrong answer
         gtag('event', 'wrong_answer', {
             'event_category': 'gameplay',
@@ -270,6 +281,105 @@ document.getElementById("hintBtn").addEventListener("click", function() {
         hintContainer.style.display = 'flex';
     }
 });
+
+// Share button functionality
+document.getElementById("shareBtn").addEventListener("click", function() {
+    // Track share button click
+    gtag('event', 'share_button_click', {
+        'event_category': 'user_interaction',
+        'event_label': 'share_puzzle'
+    });
+    
+    // Get current clue data for sharing
+    const currentClue = clues[currentIndex];
+    const todayDate = getTodayDateString();
+    const formattedDate = new Date(todayDate + 'T00:00:00').toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+    
+    // Create share text
+    const shareText = `Cryptickles - ${formattedDate}
+✅ I got today's Cryptickle, did you try?
+
+${currentClue.clue}
+${window.location.href}`;
+
+    // Check if we're on mobile and Web Share API is available
+    if (navigator.share && /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        // Mobile: Use native share tray
+        navigator.share({
+            // title: 'Cryptickles - ${formattedDate}',
+            text: shareText,
+            // url: window.location.href
+        }).catch(err => {
+            console.log('Error sharing:', err);
+            // Fallback to clipboard copy if share fails
+            copyToClipboard(shareText);
+        });
+    } else {
+        // Web: Copy to clipboard
+        copyToClipboard(shareText);
+    }
+});
+
+// Helper function to copy text to clipboard
+function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        // Use modern clipboard API
+        navigator.clipboard.writeText(text).then(() => {
+            showCopySuccessMessage();
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            fallbackCopyTextToClipboard(text);
+        });
+    } else {
+        // Fallback for older browsers
+        fallbackCopyTextToClipboard(text);
+    }
+}
+
+// Fallback copy method for older browsers
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    textArea.style.opacity = "0";
+    
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showCopySuccessMessage();
+        } else {
+            console.error('Fallback: Unable to copy');
+        }
+    } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+    }
+    
+    document.body.removeChild(textArea);
+}
+
+// Show success message when text is copied
+function showCopySuccessMessage() {
+    const shareBtn = document.getElementById('shareBtn');
+    const originalText = shareBtn.textContent;
+    
+    shareBtn.textContent = 'Copied!';
+    shareBtn.style.backgroundColor = '#0F6326';
+    
+    setTimeout(() => {
+        shareBtn.textContent = originalText;
+        shareBtn.style.backgroundColor = '#996308';
+    }, 2000);
+}
 
 // Note: Enter key handling is now done within each letter input's event listener
 
