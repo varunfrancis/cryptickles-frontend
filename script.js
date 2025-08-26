@@ -243,7 +243,7 @@ function loadClue() {
     // Hide streak container when new clue loads
     document.querySelector('.streak-container').style.display = 'none';
     
-    // Disable scrolling again when new clue loads (mobile)
+    // Disable scrolling again when new clue loads (mobile only)
     if (window.innerWidth <= 600) {
         document.body.style.setProperty('overflow', 'hidden', 'important');
         document.body.style.setProperty('position', 'fixed', 'important');
@@ -312,13 +312,11 @@ document.getElementById("submit").addEventListener("click", function() {
         const shareContainer = document.querySelector('.share-container');
         shareContainer.style.display = 'flex';
         
-        // Enable scrolling on mobile when answer is correct
-        if (window.innerWidth <= 600) {
-            document.body.style.setProperty('overflow', 'auto', 'important');
-            document.body.style.setProperty('position', 'static', 'important');
-            document.documentElement.style.setProperty('overflow', 'auto', 'important');
-            document.documentElement.style.setProperty('position', 'static', 'important');
-        }
+        // Enable scrolling on all devices when answer is correct
+        document.body.style.setProperty('overflow', 'auto', 'important');
+        document.body.style.setProperty('position', 'static', 'important');
+        document.documentElement.style.setProperty('overflow', 'auto', 'important');
+        document.documentElement.style.setProperty('position', 'static', 'important');
         
         // Add wiggle animation to share container to draw attention
         setTimeout(() => {

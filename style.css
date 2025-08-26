@@ -5,14 +5,10 @@
   box-sizing: border-box;
 }
 
-/* Disable scrolling globally */
+/* Default scrolling behavior */
 html, body {
-  overflow: hidden !important;
-  position: fixed !important;
   width: 100% !important;
   height: 100% !important;
-  touch-action: none !important;
-  -webkit-overflow-scrolling: none !important;
 }
 
 body {
@@ -21,11 +17,8 @@ body {
   min-height: 100vh;
   padding: 20px;
   padding-bottom: 80px;
-  position: fixed;
   color: #7a5a18;
-  overflow: hidden;
   width: 100%;
-  height: 100vh;
 }
 
 /* Header Styles */
@@ -748,12 +741,18 @@ body {
 
 
 @media (max-width: 600px) {
+  /* Disable scrolling on mobile by default */
+  html, body {
+    overflow: hidden !important;
+    position: fixed !important;
+    touch-action: none !important;
+    -webkit-overflow-scrolling: none !important;
+  }
+  
   body {
     padding: 0;
     padding-top: 80px; /* Space for sticky header */
     padding-bottom: 140px; /* Space for footer + buttons */
-    overflow: hidden; /* Disable scrolling on mobile */
-    position: fixed;
     width: 100%;
     height: 100vh;
   }
